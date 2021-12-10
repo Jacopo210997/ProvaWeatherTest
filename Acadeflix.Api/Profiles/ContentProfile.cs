@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Acadeflix.DAL.Entities;
+using AutoMapper;
 
 namespace Acadeflix.Api.Profiles
 {
