@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using ProvaWeatherTest.Controllers;
 using System;
 using System.Collections.Generic;
@@ -14,25 +15,22 @@ using System.Threading.Tasks;
 
 namespace Test
 {
-    
+
     public class CustomWebApplicationFactory : WebApplicationFactory<ProvaWeatherTest.Startup>
     {
-        public IConfiguration Configuration { get; private set; }
-        protected override void ConfigureWebHost(IWebHostBuilder builder)
-        {
-            // will be called after the `ConfigureServices` from the Startup
-            builder.ConfigureTestServices(services =>
-            {
-                services.AddTransient<IWeatherWorkerService, WeatherWorkerService>();
-            });
-            builder.ConfigureAppConfiguration(config =>
-            {
-                Configuration = new ConfigurationBuilder()
-                    .AddJsonFile("integrationsettings.json")
-                    .Build();
-
-                config.AddConfiguration(Configuration);
-            });
-        }
+        
+        protected override IHostBuilder CreateHostBuilder() =>
+            base.CreateHostBuilder().UseEnvironment("Testing");
     }
 }
+
+
+        //builder.ConfigureAppConfiguration(config =>
+        //{
+        //    Configuration = new ConfigurationBuilder()
+        //        .AddJsonFile(@"C:\Users\jacop\source\repos\ProvaWeatherTest\ProvaWeatherTest\appsettings.Test.json")
+        //        .Build();
+
+//    config.AddConfiguration(Configuration);
+//});
+
