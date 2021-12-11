@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,15 +14,14 @@ namespace ProvaWeatherTest.Controllers
         {
             _ctx = ctx;
         }
-        public IEnumerable<WeatherForecast> Get()
+        public Task<List<WeatherForecast>> Get()
         {
-            return new List<WeatherForecast>
-            {
-                new WeatherForecast
-                {
-                    Summary = "Giorgio merda"
-                }
-            };
+            return _ctx.Weathers.ToListAsync();
+        }
+
+        public Task<WeatherForecast> Get(int id)
+        {
+            return _ctx.Weathers.SingleAsync(weather => weather.Id == id);
         }
     }
 }

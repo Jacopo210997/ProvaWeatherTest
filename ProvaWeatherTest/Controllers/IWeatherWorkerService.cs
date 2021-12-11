@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProvaWeatherTest.Controllers
 {
     public interface IWeatherWorkerService
     {
-        public IEnumerable<WeatherForecast> Get();
+        Task<List<WeatherForecast>> Get();
+        Task<WeatherForecast> Get(int id);
     }
 }
