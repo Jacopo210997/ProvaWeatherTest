@@ -11,12 +11,20 @@ using Xunit;
 
 public abstract class IntegrationTest : IClassFixture<CustomWebApplicationFactory>
 {
+    private readonly Checkpoint _checkpoint = new Checkpoint
+    {
+        SchemasToInclude = new[] {
+            "Playground"
+        },
+        WithReseed = true
+    };
     protected readonly CustomWebApplicationFactory _factory;
     protected readonly HttpClient _client;
 
     public IntegrationTest(CustomWebApplicationFactory fixture)
     {
         _factory = fixture;
-        _client = _factory.CreateClient(); 
+        _client = _factory.CreateClient();
+        _checkpoint.Reset("Server=(localdb)\\MSSQLLocalDB;Initial Catalog=WeatherDb.Testing;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False").Wait();
     }
 }

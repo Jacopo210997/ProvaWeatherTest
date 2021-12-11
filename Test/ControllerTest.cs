@@ -19,14 +19,51 @@ namespace Tests
 
 
         //Controller che injecta la WebApplicationFactory che runna l'API nel Test
-       
 
         public ControllerWeatherTest(CustomWebApplicationFactory factory) : base(factory)
         {
             
         }
+        //[Fact]
+        public async Task GetWeathersTest()
+        {
+            var ctx =  await SetupDbContext();
+            var weather = new WeatherForecast
+            {
+                Summary = "Giorgio merda"
+            };
+            ctx.Weathers.Add(weather);
+            await ctx.SaveChangesAsync();
+            var response = await _client.GetAsync("/weatherforecast");          //In questa riga, mandiamo una http Get Request al controller che mi dà una Response
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);      //qui controllo se lo status code della response è 200
+
+            var forecast = JsonConvert.DeserializeObject<WeatherForecast[]>(await response.Content.ReadAsStringAsync());
+            
+            forecast.Should().HaveCount(1);
+        }
+
         [Fact]
-        public async Task GetWeather()
+        public async Task GetWeatherByIdTest()
+        {
+            //var ctx = await SetupDbContext();
+            var ctx = _factory
+                .Services
+                .CreateScope()
+                .ServiceProvider
+                .GetRequiredService<WeatherDbContext>();
+            var weather = new WeatherForecast
+            {
+                Summary = "Giorgio merda"
+            };
+            ctx.Weathers.Add(weather);
+            await ctx.SaveChangesAsync();
+            var response = await _client.GetAsync("/weatherforecast/" + weather.Id);          //In questa riga, mandiamo una http Get Request al controller che mi dà una Response
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);
+            var forecast = JsonConvert.DeserializeObject<WeatherForecast>(await response.Content.ReadAsStringAsync());
+            forecast.Id.Should().Be(weather.Id);
+        }
+
+        private async Task<WeatherDbContext> SetupDbContext()
         {
             var ctx = _factory
                 .Services
@@ -47,18 +84,7 @@ namespace Tests
 
             //resetto l'id autoincrementale sulle tabelle Products e Producers
             await ctx.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT('Weathers', RESEED, 1)");
-            var weather = new WeatherForecast
-            {
-                Summary = "Giorgio merda"
-            };
-            ctx.Weathers.Add(weather);
-            await ctx.SaveChangesAsync();
-            var response = await _client.GetAsync("/weatherforecast");          //In questa riga, mandiamo una http Get Request al controller che mi dà una Response
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);      //qui controllo se lo status code della response è 200
-
-            var forecast = JsonConvert.DeserializeObject<WeatherForecast[]>(await response.Content.ReadAsStringAsync());
-            
-            forecast[0].Summary.Should().Be("Giorgio merda");
+            return ctx;
         }
     }
 }
