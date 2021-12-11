@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Acadeflix.Api.Profiles;
 
 namespace Acadeflix.Api
 {
@@ -27,7 +28,7 @@ namespace Acadeflix.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddAutoMapper(typeof(ContentProfile), typeof(WatcherProfile));
             services.AddControllers();
             services.AddDbContext<AcadeflixDbContext>();
             services.AddSwaggerGen(c =>
