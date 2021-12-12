@@ -9,16 +9,16 @@ namespace ProvaWeatherTest.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController : ControllerBase
+    public class WeathersForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
         private readonly IWeatherWorkerService _service;
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<WeathersForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, IWeatherWorkerService service)
+        public WeathersForecastController(ILogger<WeathersForecastController> logger, IWeatherWorkerService service)
         {
             _logger = logger;
             _service = service;
@@ -35,5 +35,18 @@ namespace ProvaWeatherTest.Controllers
         {
             return Ok(await _service.Get(id));
         }
+
+        [HttpPost()]
+        public async Task<IActionResult> PostWeather(WeatherForecast weatherRequest)
+        {
+            var weatherResponse = await _service.Insert(weatherRequest);
+            return  CreatedAtAction
+                (
+                    nameof(Get),
+                    new {Id = weatherResponse.Id},
+                    weatherResponse
+                );
+        }
+        
     }
 }

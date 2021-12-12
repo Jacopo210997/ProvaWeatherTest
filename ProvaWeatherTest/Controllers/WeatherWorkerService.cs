@@ -23,5 +23,12 @@ namespace ProvaWeatherTest.Controllers
         {
             return _ctx.Weathers.SingleAsync(weather => weather.Id == id);
         }
+
+        public async Task<WeatherForecast> Insert(WeatherForecast weather)
+        {
+            _ctx.Add(weather);
+            await _ctx.SaveChangesAsync();
+            return weather;
+        }
     }
 }

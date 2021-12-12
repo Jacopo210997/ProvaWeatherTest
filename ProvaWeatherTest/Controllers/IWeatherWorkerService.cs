@@ -7,5 +7,6 @@ namespace ProvaWeatherTest.Controllers
     {
         Task<List<WeatherForecast>> Get();
         Task<WeatherForecast> Get(int id);
+        Task<WeatherForecast> Insert(WeatherForecast weather);
     }
 }
