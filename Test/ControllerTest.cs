@@ -25,22 +25,22 @@ namespace Tests
         {
             
         }
+
         [Fact]
         public async Task GetWeathersTest()
         {
-            var ctx =  await SetupDbContext();
-            var weather = new WeatherForecast
-            {
-                Summary = "Giorgio merda"
-            };
-            ctx.Weathers.Add(weather);
-            await ctx.SaveChangesAsync();
-            var response = await _client.GetAsync("/weatherforecast");          //In questa riga, mandiamo una http Get Request al controller che mi dà una Response
-            response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);      //qui controllo se lo status code della response è 200
+                var ctx = await SetupDbContext();
+                var weather = new WeatherForecast
+                {
+                    Summary = "Giorgio merda"
+                };
+                ctx.Weathers.Add(weather);
+                await ctx.SaveChangesAsync();
+                var response = await _client.GetAsync("/weatherforecast");          //In questa riga, mandiamo una http Get Request al controller che mi dà una Response
+                response.StatusCode.Should().Be(System.Net.HttpStatusCode.OK);      //qui controllo se lo status code della response è 200
+                var forecast = JsonConvert.DeserializeObject<WeatherForecast[]>(await response.Content.ReadAsStringAsync());
 
-            var forecast = JsonConvert.DeserializeObject<WeatherForecast[]>(await response.Content.ReadAsStringAsync());
-            
-            forecast.Should().HaveCount(1);
+                forecast.Should().HaveCount(1);
         }
 
         [Fact]
@@ -70,8 +70,8 @@ namespace Tests
 
             await ctx.Database.EnsureDeletedAsync();
             await ctx.Database.EnsureCreatedAsync();
-            var originalEntities = await ctx.Weathers
-               .ToListAsync();
+            var originalEntities = ctx.Weathers
+               .ToList();
 
             //una volta recuperati li rimuovo come se fosse una normale collezione
             ctx.Weathers.RemoveRange(originalEntities);

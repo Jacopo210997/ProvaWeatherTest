@@ -9,7 +9,8 @@ using System.Threading.Tasks;
 using Test;
 using Xunit;
 
-public abstract class IntegrationTest : IClassFixture<CustomWebApplicationFactory>
+//[Collection("Sequential")]
+public abstract class IntegrationTest : IClassFixture<CustomWebApplicationFactory>//,IDisposable
 {
     protected readonly CustomWebApplicationFactory _factory;
     protected readonly HttpClient _client;
@@ -18,6 +19,10 @@ public abstract class IntegrationTest : IClassFixture<CustomWebApplicationFactor
     {
         _factory = fixture;
         _client = _factory.CreateClient();
-      
+    }
+
+    public void Dispose()
+    {
+        
     }
 }
