@@ -27,8 +27,8 @@ namespace Tests
             
         }
 
-      [Fact]
-        public async void GetWeather1()
+        [Fact]
+        public async void GetWeatherAll()
         {
                 var ctx = await SetupDbContext();
                 var weather = new WeatherForecast
@@ -44,8 +44,8 @@ namespace Tests
                 forecast.Should().HaveCount(1);
         }
 
-      [Fact]
-        public async void GetWeather2()
+        [Fact]
+        public async void GetWeatherById()
         {
             var ctx = await SetupDbContext();
             
@@ -76,6 +76,24 @@ namespace Tests
             response.StatusCode.Should().Be(System.Net.HttpStatusCode.Created);
             var objectTask = await response.Content.ReadAsAsync<WeatherForecast>();
             ctx.Weathers.SingleOrDefaultAsync(weather => weather.Id == objectTask.Id).Should().NotBeNull();
+        }
+
+        [Fact]
+        public async void DeleteTest()
+        {
+            var ctx = await SetupDbContext();
+
+            var weather = new WeatherForecast
+            {
+                Summary = "Giorgio merda"
+            };
+
+            ctx.Weathers.Add(weather);
+            await ctx.SaveChangesAsync();
+            var response = await _client.DeleteAsync("weathersforecast/" + weather.Id);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.NoContent);
+            ctx.Weathers.SingleOrDefaultAsync(weatherOriginal => weatherOriginal.Id == weather.Id).Result.Should().BeNull();
+
         }
 
         private async Task<WeatherDbContext> SetupDbContext()

@@ -40,12 +40,19 @@ namespace ProvaWeatherTest.Controllers
         public async Task<IActionResult> PostWeather(WeatherForecast weatherRequest)
         {
             var weatherResponse = await _service.Insert(weatherRequest);
-            return  CreatedAtAction
+            return CreatedAtAction
                 (
                     nameof(Get),
-                    new {Id = weatherResponse.Id},
+                    new { Id = weatherResponse.Id },
                     weatherResponse
                 );
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteWeather(int id)
+        {
+            await _service.Delete(id);
+            return NoContent();
         }
         
     }

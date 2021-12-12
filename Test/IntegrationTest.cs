@@ -20,9 +20,4 @@ public abstract class IntegrationTest : IClassFixture<CustomWebApplicationFactor
         _factory = fixture;
         _client = _factory.CreateClient();
     }
-
-    public void Dispose()
-    {
-        
-    }
 }

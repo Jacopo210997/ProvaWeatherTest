@@ -14,6 +14,14 @@ namespace ProvaWeatherTest.Controllers
         {
             _ctx = ctx;
         }
+
+        public async Task Delete(int id)
+        {
+            var weatherRemove = await _ctx.Weathers.SingleOrDefaultAsync(weather => weather.Id == id);
+            _ctx.Weathers.Remove(weatherRemove);
+            _ctx.SaveChanges();
+        }
+
         public Task<List<WeatherForecast>> Get()
         {
             return _ctx.Weathers.ToListAsync();
