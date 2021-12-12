@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using ProvaWeatherTest;
 using ProvaWeatherTest.Controllers;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Test;
@@ -24,7 +25,7 @@ namespace Tests
         {
             
         }
-        //[Fact]
+        [Fact]
         public async Task GetWeathersTest()
         {
             var ctx =  await SetupDbContext();
@@ -45,12 +46,8 @@ namespace Tests
         [Fact]
         public async Task GetWeatherByIdTest()
         {
-            //var ctx = await SetupDbContext();
-            var ctx = _factory
-                .Services
-                .CreateScope()
-                .ServiceProvider
-                .GetRequiredService<WeatherDbContext>();
+            var ctx = await SetupDbContext();
+            
             var weather = new WeatherForecast
             {
                 Summary = "Giorgio merda"
@@ -84,6 +81,7 @@ namespace Tests
 
             //resetto l'id autoincrementale sulle tabelle Products e Producers
             await ctx.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT('Weathers', RESEED, 1)");
+            await ctx.SaveChangesAsync();
             return ctx;
         }
     }
