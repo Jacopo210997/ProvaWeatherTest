@@ -28,7 +28,7 @@ namespace Tests
         }
 
       [Fact]
-        public async Task GetWeathersTest()
+        public async void GetWeather1()
         {
                 var ctx = await SetupDbContext();
                 var weather = new WeatherForecast
@@ -45,7 +45,7 @@ namespace Tests
         }
 
       [Fact]
-        public async Task GetWeatherByIdTest()
+        public async void GetWeather2()
         {
             var ctx = await SetupDbContext();
             
@@ -62,7 +62,7 @@ namespace Tests
         }
 
         [Fact]
-        public async Task PostWeatherTest()
+        public async void PostWeather()
         {
             var ctx = await SetupDbContext();
 
